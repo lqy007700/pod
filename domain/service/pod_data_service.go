@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"github.com/zxnlx/pod/domain/model"
 	"github.com/zxnlx/pod/domain/repository"
 	"github.com/zxnlx/pod/proto/pod"
@@ -9,6 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"log"
 	"strconv"
 )
 
@@ -60,8 +62,19 @@ func (p *PodDataService) FindAllPod() ([]model.Pod, error) {
 }
 
 func (p *PodDataService) CreateToK8s(info *pod.PodInfo) error {
-	//TODO implement me
-	panic("implement me")
+	p.setDeployment(info)
+	_, err := p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Get(context.Background(), info.PodName, metav1.GetOptions{})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	_, err = p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Create(context.Background(), p.deployment, metav1.CreateOptions{})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
 
 func (p *PodDataService) DelForK8s(m *model.Pod) error {
