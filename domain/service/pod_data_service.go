@@ -77,14 +77,19 @@ func (p *PodDataService) CreateToK8s(info *pod.PodInfo) error {
 	return nil
 }
 
-func (p *PodDataService) DelForK8s(m *model.Pod) error {
-	//TODO implement me
-	panic("implement me")
+func (p *PodDataService) DelForK8s(info *model.Pod) error {
+	err := p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Delete(context.Background(), info.PodName, metav1.DeleteOptions{})
+	if err != nil {
+		return err
+	}
+
+	return p.DelPod(info.ID)
 }
 
 func (p *PodDataService) UpdateForK8s(info *pod.PodInfo) error {
-	//TODO implement me
-	panic("implement me")
+	p.setDeployment(info)
+	_, err := p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Update(context.Background(), p.deployment, metav1.UpdateOptions{})
+	return err
 }
 
 func (p *PodDataService) setDeployment(info *pod.PodInfo) {
