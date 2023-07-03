@@ -25,7 +25,7 @@ type PodRepository struct {
 }
 
 func (p *PodRepository) InitTable() error {
-	return nil
+	return p.db.AutoMigrate(&model.Pod{}, &model.PodEnv{}, &model.PodPort{})
 }
 
 func (p *PodRepository) FindPodById(id int64) (*model.Pod, error) {
