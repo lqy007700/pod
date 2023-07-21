@@ -1,7 +1,6 @@
-package pod
+package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/asim/go-micro/plugins/registry/consul/v3"
@@ -9,10 +8,12 @@ import (
 	opentracing2 "github.com/asim/go-micro/plugins/wrapper/trace/opentracing/v3"
 	"github.com/asim/go-micro/v3"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/asim/go-micro/v3/server"
 	"github.com/opentracing/opentracing-go"
 	"github.com/zxnlx/common"
 	"github.com/zxnlx/pod/domain/repository"
 	service2 "github.com/zxnlx/pod/domain/service"
+	"github.com/zxnlx/pod/handler"
 	hystrix2 "github.com/zxnlx/pod/plugin/hystrix"
 	"github.com/zxnlx/pod/proto/pod"
 	"gorm.io/driver/mysql"
@@ -26,15 +27,15 @@ import (
 
 var (
 	// 注册中心配置
-	consulHost       = "127.0.0.1"
+	consulHost       = "192.168.55.2"
 	consulPort int64 = 8500
 
 	// 链路
-	tracerHost = "127.0.0.1"
+	tracerHost = "192.168.55.2"
 	tracerPort = 6381
 
 	// 熔断
-	hystrixPort int64 = 9092
+	hystrixPort = 9092
 
 	//监控
 	prometheusPort = 9192
@@ -51,7 +52,7 @@ func initRegistry() registry.Registry {
 
 func initConfig() *gorm.DB {
 	// 配置中心
-	config, err := common.GetConsulConfig(consulHost, consulPort, "/micro/config")
+	config, err := common.GetConsulConfig(consulHost, consulPort, "/base/micro/config")
 	if err != nil {
 		common.Fatal(err)
 		return nil
@@ -71,7 +72,6 @@ func initConfig() *gorm.DB {
 		common.Fatal(err)
 		return nil
 	}
-	common.Info(db)
 	return db
 }
 
@@ -94,7 +94,7 @@ func initHystrix() {
 	go func() {
 		//http://192.168.0.112:9092/turbine/turbine.stream
 		//看板访问地址 http://127.0.0.1:9002/hystrix，url后面一定要带 /hystrix
-		err := http.ListenAndServe(net.JoinHostPort("0.0.0.0", "9092"), hystrixHandler)
+		err := http.ListenAndServe(net.JoinHostPort("0.0.0.0", strconv.Itoa(hystrixPort)), hystrixHandler)
 		if err != nil {
 			common.Fatal(err)
 		}
@@ -103,11 +103,13 @@ func initHystrix() {
 
 func initK8s() *kubernetes.Clientset {
 	//k8s
-	var k8sConfig *string
-	k8sConfig = flag.String("kubeconfig", "", "/Users/lqy007700/Data/config")
-	flag.Parse()
+	//var k8sConfig *string
+	//k8sConfig = flag.String("kubeconfig", "", "/Users/lqy007700/Data/config")
+	//flag.Parse()
+	//common.Info(*k8sConfig)
 
-	config, err := clientcmd.BuildConfigFromFlags("", *k8sConfig)
+	//config, err := clientcmd.BuildConfigFromFlags("", "/Users/lqy007700/Data/config")
+	config, err := clientcmd.BuildConfigFromFlags("", "/root/.kube/config")
 	if err != nil {
 		common.Fatal(err)
 		return nil
@@ -141,9 +143,13 @@ func main() {
 	common.PrometheusBoot(prometheusPort)
 
 	service := micro.NewService(
+		micro.Server(server.NewServer(func(options *server.Options) {
+			options.Advertise = "192.168.55.2:8081"
+		})),
 		micro.Name("go.micro.service.pod"),
 		micro.Version("latest"),
 		micro.Registry(c),
+		micro.Address(":8081"),
 		// 链路
 		micro.WrapHandler(opentracing2.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.WrapClient(opentracing2.NewClientWrapper(opentracing.GlobalTracer())),
@@ -155,15 +161,8 @@ func main() {
 
 	service.Init()
 
-	// 创建表 执行一次
-	err := repository.NewPodRepository(db).InitTable()
-	if err != nil {
-		common.Fatal(err)
-		return
-	}
-
 	dataService := service2.NewPodDataService(repository.NewPodRepository(db), clientSet)
-	err = pod.RegisterPodHandler(service.Server(), &handler.PodHandler())
+	err := pod.RegisterPodHandler(service.Server(), &handler.PodHandler{PodDataService: dataService})
 	if err != nil {
 		common.Fatal(err)
 		return

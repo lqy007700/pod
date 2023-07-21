@@ -1,0 +1,13 @@
+{"level":"fatal","ts":"2023-07-20T15:12:57.466+0800","caller":"pod/main.go:57","msg":"error loading source consul: source not found: /micro/config"}
+{"level":"info","ts":"2023-07-20T15:14:39.451+0800","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3306)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-20T15:14:39.453+0800","caller":"pod/main.go:72","msg":"dial tcp 172.17.5.247:3306: connect: connection refused"}
+{"level":"info","ts":"2023-07-20T15:20:56.463+0800","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-20T15:20:56.786+0800","caller":"pod/main.go:113","msg":"stat /root/.kube/config: no such file or directory"}
+{"level":"info","ts":"2023-07-20T15:25:01.008+0800","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-20T15:25:01.023+0800","caller":"pod/main.go:113","msg":"stat /root/.kube/config: no such file or directory"}
+{"level":"info","ts":"2023-07-20T15:26:23.268+0800","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-20T07:39:30.151Z","caller":"pod/main.go:57","msg":"error loading source consul: Get \"http://172.17.5.247:8500/v1/kv/base/micro/config?recurse=\": dial tcp 172.17.5.247:8500: connect: no route to host"}
+{"level":"fatal","ts":"2023-07-20T07:41:25.151Z","caller":"pod/main.go:57","msg":"error loading source consul: Get \"http://172.17.5.247:8500/v1/kv/base/micro/config?recurse=\": dial tcp 172.17.5.247:8500: connect: no route to host"}
+{"level":"info","ts":"2023-07-20T07:51:01.993Z","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-20T07:51:05.085Z","caller":"pod/main.go:72","msg":"dial tcp 172.17.5.247:3307: connect: no route to host"}
+{"level":"info","ts":"2023-07-20T08:19:08.811Z","caller":"pod/main.go:69","msg":"root:root@tcp(192.168.55.2:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}

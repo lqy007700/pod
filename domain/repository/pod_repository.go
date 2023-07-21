@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/zxnlx/common"
 	"github.com/zxnlx/pod/domain/model"
 	"gorm.io/gorm"
 )
@@ -25,6 +26,7 @@ type PodRepository struct {
 }
 
 func (p *PodRepository) InitTable() error {
+	common.Info("Init table 11")
 	return p.db.AutoMigrate(&model.Pod{}, &model.PodEnv{}, &model.PodPort{})
 }
 

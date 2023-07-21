@@ -66,17 +66,55 @@ func (p *PodHandler) DelPod(ctx context.Context, req *pod.PodId, resp *pod.Respo
 	return nil
 }
 
-func (p *PodHandler) FindPodById(ctx context.Context, id *pod.PodId, info *pod.PodInfo) error {
-	//TODO implement me
-	panic("implement me")
+func (p *PodHandler) FindPodById(ctx context.Context, req *pod.PodId, info *pod.PodInfo) error {
+	podInfo, err := p.PodDataService.FindPodById(req.Id)
+	if err != nil {
+		return err
+	}
+	err = common.SwapTo(podInfo, info)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (p *PodHandler) UpdatePod(ctx context.Context, info *pod.PodInfo, response *pod.Response) error {
-	//TODO implement me
-	panic("implement me")
+func (p *PodHandler) UpdatePod(ctx context.Context, info *pod.PodInfo, res *pod.Response) error {
+	err := p.PodDataService.UpdateForK8s(info)
+	if err != nil {
+		return err
+	}
+
+	podInfo, err := p.PodDataService.FindPodById(info.Id)
+	if err != nil {
+		return err
+	}
+
+	err = common.SwapTo(info, podInfo)
+	if err != nil {
+		return err
+	}
+
+	err = p.PodDataService.UpdatePod(podInfo)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p *PodHandler) FindAllPod(ctx context.Context, all *pod.FindAll, list *pod.PodList) error {
-	//TODO implement me
-	panic("implement me")
+	allPod, err := p.PodDataService.FindAllPod()
+	if err != nil {
+		return err
+	}
+
+	for _, v := range allPod {
+		podInfo := &pod.PodInfo{}
+		err = common.SwapTo(v, podInfo)
+		if err != nil {
+			return err
+		}
+
+		list.PodList = append(list.PodList, podInfo)
+	}
+	return nil
 }
