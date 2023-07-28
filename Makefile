@@ -10,4 +10,4 @@ docker:
 	sudo docker build . -t zxnl/pod:latest
 
 run-docker:
-	sudo docker run -p 8081:8081 -p 9092:9092 -p 9192:9192 -v /Users/lqy007700/Data/config:/root/.kube/config -v /Users/lqy007700/Data/code/go-application/go-paas/pod/micro.log:/micro.log lqy007700/pod
+	sudo docker run -p 8083:8083 -p 9093:9092 -p 9191:9192 -v /Users/lqy007700/Data/config:/root/.kube/config -v /Users/lqy007700/Data/code/go-application/go-paas/pod/micro.log:/micro.log zxnl/pod

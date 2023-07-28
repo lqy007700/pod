@@ -11,3 +11,17 @@
 {"level":"info","ts":"2023-07-20T07:51:01.993Z","caller":"pod/main.go:69","msg":"root:root@tcp(172.17.5.247:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
 {"level":"fatal","ts":"2023-07-20T07:51:05.085Z","caller":"pod/main.go:72","msg":"dial tcp 172.17.5.247:3307: connect: no route to host"}
 {"level":"info","ts":"2023-07-20T08:19:08.811Z","caller":"pod/main.go:69","msg":"root:root@tcp(192.168.55.2:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"fatal","ts":"2023-07-28T02:16:18.368Z","caller":"pod/main.go:57","msg":"error loading source consul: Get \"http://192.168.55.2:8500/v1/kv/base/micro/config?recurse=\": dial tcp 192.168.55.2:8500: i/o timeout"}
+{"level":"fatal","ts":"2023-07-28T02:19:52.858Z","caller":"pod/main.go:60","msg":"error loading source consul: Get \"http://172.17.5.126:8500/v1/kv/base/micro/config?recurse=\": dial tcp 172.17.5.126:8500: connect: no route to host"}
+{"level":"fatal","ts":"2023-07-28T02:21:15.163Z","caller":"pod/main.go:60","msg":"error loading source consul: Get \"http://172.17.5.126:8500/v1/kv/base/micro/config?recurse=\": dial tcp 172.17.5.126:8500: connect: no route to host"}
+{"level":"fatal","ts":"2023-07-28T02:21:38.650Z","caller":"pod/main.go:60","msg":"error loading source consul: Get \"http://172.17.5.126:8500/v1/kv/base/micro/config?recurse=\": dial tcp 172.17.5.126:8500: connect: no route to host"}
+{"level":"fatal","ts":"2023-07-28T02:22:36.023Z","caller":"pod/main.go:66","msg":"json: cannot unmarshal string into Go struct field MysqlConfig.port of type int"}
+{"level":"info","ts":"2023-07-28T02:23:07.900Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T02:24:08.207Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T02:24:31.511Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T06:28:56.095Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T06:35:38.439Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T06:37:19.148Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T07:49:26.551Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T07:52:26.171Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}
+{"level":"info","ts":"2023-07-28T07:55:41.976Z","caller":"pod/main.go:72","msg":"root:root@tcp(host.docker.internal:3307)/paas?charset=utf8mb4&parseTime=True&loc=Local"}

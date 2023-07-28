@@ -26,12 +26,15 @@ import (
 )
 
 var (
+	serviceHost = "host.docker.internal"
+	servicePort = "8083"
+
 	// 注册中心配置
-	consulHost       = "192.168.55.2"
+	consulHost       = serviceHost
 	consulPort int64 = 8500
 
 	// 链路
-	tracerHost = "192.168.55.2"
+	tracerHost = serviceHost
 	tracerPort = 6381
 
 	// 熔断
@@ -78,7 +81,7 @@ func initConfig() *gorm.DB {
 func initTracer() {
 	// 链路追踪
 	// jaeger
-	tracer, i, err := common.NewTracer("base", tracerHost+":"+strconv.Itoa(tracerPort))
+	tracer, i, err := common.NewTracer("go.micro.service.pod", tracerHost+":"+strconv.Itoa(tracerPort))
 	if err != nil {
 		common.Fatal(err)
 		return
@@ -144,12 +147,12 @@ func main() {
 
 	service := micro.NewService(
 		micro.Server(server.NewServer(func(options *server.Options) {
-			options.Advertise = "192.168.55.2:8081"
+			options.Advertise = "host.docker.internal:" + servicePort
 		})),
 		micro.Name("go.micro.service.pod"),
 		micro.Version("latest"),
 		micro.Registry(c),
-		micro.Address(":8081"),
+		micro.Address(":"+servicePort),
 		// 链路
 		micro.WrapHandler(opentracing2.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.WrapClient(opentracing2.NewClientWrapper(opentracing.GlobalTracer())),
