@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"github.com/zxnlx/common"
 	"github.com/zxnlx/pod/domain/model"
 	"github.com/zxnlx/pod/domain/repository"
 	"github.com/zxnlx/pod/proto/pod"
@@ -10,7 +12,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"log"
 	"strconv"
 )
 
@@ -62,19 +63,21 @@ func (p *PodDataService) FindAllPod() ([]model.Pod, error) {
 }
 
 func (p *PodDataService) CreateToK8s(info *pod.PodInfo) error {
+	common.Info("pod Into ", info)
 	p.setDeployment(info)
-	_, err := p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Get(context.Background(), info.PodName, metav1.GetOptions{})
-	if err != nil {
-		log.Println(err)
-		return err
+	common.Info("Deployment Info ", p.deployment)
+	if _, err := p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Get(context.TODO(), info.PodName, metav1.GetOptions{}); err != nil {
+		if _, err = p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Create(context.TODO(), p.deployment, metav1.CreateOptions{}); err != nil {
+			common.Error(err)
+			return err
+		}
+		common.Info("创建成功")
+		return nil
+	} else {
+		//可以写自己的业务逻辑
+		common.Error("Pod " + info.PodName + "已经存在")
+		return errors.New("Pod " + info.PodName + " 已经存在")
 	}
-	_, err = p.K8sClientSet.AppsV1().Deployments(info.PodNamespace).Create(context.Background(), p.deployment, metav1.CreateOptions{})
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
 }
 
 func (p *PodDataService) DelForK8s(info *model.Pod) error {
@@ -125,7 +128,7 @@ func (p *PodDataService) setDeployment(info *pod.PodInfo) {
 				Containers: []v12.Container{
 					{
 						Name:            info.PodName,
-						Image:           info.PodImages,
+						Image:           info.PodImage,
 						Ports:           p.getContainerPort(info),
 						Env:             p.getEnv(info),
 						Resources:       p.getResource(info),

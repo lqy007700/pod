@@ -12,7 +12,7 @@ type Pod struct {
 	ID           int64  `json:"id"`
 	PodName      string `gorm:"unique_index,not_null" json:"pod_name"`
 	PodNamespace string `json:"pod_namespace"`
-	PodTeamID    int64  `json:"pod_team_id"`
+	PodTeamID    string `json:"pod_team_id"`
 	PodReplicas  int32  `json:"pod_replicas"`
 
 	PodCpuMin float32 `json:"pod_cpu_min"`

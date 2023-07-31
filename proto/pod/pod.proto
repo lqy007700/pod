@@ -36,7 +36,7 @@ message PodInfo{
   string pod_pull_policy = 10;
   string pod_restart = 11;
   string pod_type = 12;
-  string pod_images = 13;
+  string pod_image = 13;
 }
 
 message PodPort{
